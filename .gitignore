@@ -47,3 +47,5 @@
 
 # CLion specific
 CMakeLists.txt.user
+/cmake-build-debug/
+.idea/
