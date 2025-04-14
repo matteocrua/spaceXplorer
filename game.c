@@ -1,5 +1,5 @@
 /*
-Filename: game.c
+    Filename: game.c
     Description: C file to hold all the functions for the game
     Author: Matteo Crua
     Date: 11/04/2025
@@ -9,6 +9,7 @@ Filename: game.c
       1.0: initial, added map initialisation and printMap() 11/04/2025
       1.1: added comments 11/04/2025
       2.0: added junk and asteroid initialisation 11/04/2025
+      2.1: added occupied check for junk and asteroid 14/04/2025
 */
 
 #include <stdio.h>
@@ -27,6 +28,8 @@ void initMap(){
             // if cell lies on the border, set it to '#'
             if (i == 0 || i == MAPSIZE-1 || j == 0 || j == MAPSIZE-1){
                 map[i][j] = BORDER;
+            }else{
+                map[i][j] = ' '; // set empty cell
             }
         }
     }
@@ -35,9 +38,13 @@ void initMap(){
 void initJunk(junk arrJunk[], int numJunk) {
     // loop through the given number of junk
     for (int i = 0; i < numJunk; i++) {
-        // generate random positions avoiding borders
-        arrJunk[i].pos.x = 1 + rand() % (MAPSIZE - 2);
-        arrJunk[i].pos.y = 1 + rand() % (MAPSIZE - 2);
+        // check if current cell is empty
+        do {
+            // generate random positions avoiding borders
+            arrJunk[i].pos.x = 1 + rand() % (MAPSIZE - 2);
+            arrJunk[i].pos.y = 1 + rand() % (MAPSIZE - 2);
+
+        }while (map[arrJunk[i].pos.y][arrJunk[i].pos.x] != ' ');
 
         // 1 in 10 chance to be super junk
         arrJunk[i].isSuperJunk = (rand() % 10 == 0);
@@ -55,9 +62,13 @@ void initJunk(junk arrJunk[], int numJunk) {
 void initAsteroid(asteroid arrAsteroid[], int numAsteroid) {
     // loop through the given number of asteroids
     for (int i = 0; i < numAsteroid; i++) {
-        // generate random positions avoiding borders
-        arrAsteroid[i].pos.x = 1 + rand() % (MAPSIZE - 2);
-        arrAsteroid[i].pos.y = 1 + rand() % (MAPSIZE - 2);
+        // check if current cell is empty
+        do {
+            // generate random positions avoiding borders
+            arrAsteroid[i].pos.x = 1 + rand() % (MAPSIZE - 2);
+            arrAsteroid[i].pos.y = 1 + rand() % (MAPSIZE - 2);
+
+        }while (map[arrAsteroid[i].pos.y][arrAsteroid[i].pos.x] != ' ');
 
         // 1 in 5 chance to be super asteroid
         arrAsteroid[i].isSuperAsteroid = (rand() % 5 == 0);
@@ -75,7 +86,9 @@ void initAsteroid(asteroid arrAsteroid[], int numAsteroid) {
 void printMap(){
     for(int i = 0; i < MAPSIZE; i++){
         for (int j = 0; j < MAPSIZE; j++){
-            printf("%c  ", map[i][j]);
+            // 3 spaces for each cell
+            // to make map look square
+            printf("%3c", map[i][j]);
         }
         printf("\n");
     }

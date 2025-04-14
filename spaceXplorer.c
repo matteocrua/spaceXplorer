@@ -1,5 +1,5 @@
 /*
-Filename: spaceXplorer.c
+    Filename: spaceXplorer.c
     Description: main file for the spaceXplorer game
     Author: Matteo Crua
     Date: 11/04/2025
