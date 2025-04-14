@@ -15,6 +15,7 @@ Filename: game.h
 #include <stdbool.h>
 
 #define MAPSIZE 20      // map size, 0-19 +2 for border
+#define BORDER '#'      // border symbol
 
 ///// define the ship, junk and asteroid structures /////
 
