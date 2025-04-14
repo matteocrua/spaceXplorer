@@ -8,7 +8,7 @@ Filename: game.c
     Log:
       1.0: initial, added map initialisation and printMap() 11/04/2025
       1.1: added comments 11/04/2025
-      2.0: added junk initialisation 11/04/2025
+      2.0: added junk and asteroid initialisation 11/04/2025
 */
 
 #include <stdio.h>
@@ -39,7 +39,7 @@ void initJunk(junk arrJunk[], int numJunk) {
         arrJunk[i].pos.x = 1 + rand() % (MAPSIZE - 2);
         arrJunk[i].pos.y = 1 + rand() % (MAPSIZE - 2);
 
-        // 1 in 5 chance to be super junk
+        // 1 in 10 chance to be super junk
         arrJunk[i].isSuperJunk = (rand() % 10 == 0);
 
         // set value based on junk type
