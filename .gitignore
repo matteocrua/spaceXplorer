@@ -1,0 +1,50 @@
+# Build directories
+/cmake-build-*/
+/build/
+/out/
+
+# IDE files
+/.idea/
+*.iml
+*.iws
+.vscode/
+
+# Object files
+*.o
+*.ko
+*.obj
+*.elf
+
+# Precompiled Headers
+*.gch
+*.pch
+
+# Libraries
+*.lib
+*.a
+*.la
+*.lo
+
+# Executables
+*.exe
+*.out
+*.app
+*.i*86
+*.x86_64
+*.hex
+
+# Debug files
+*.dSYM/
+*.su
+*.idb
+*.pdb
+
+# Dependency files
+*.d
+
+# Temp files
+*~
+.DS_Store
+
+# CLion specific
+CMakeLists.txt.user
