@@ -1,3 +1,0 @@
-D:/OneDrive - UWE Bristol/programming for engineers/SpaceXplorer_game/spaceXplorer/cmake-build-debug/CMakeFiles/spaceXplorer.dir
-D:/OneDrive - UWE Bristol/programming for engineers/SpaceXplorer_game/spaceXplorer/cmake-build-debug/CMakeFiles/edit_cache.dir
-D:/OneDrive - UWE Bristol/programming for engineers/SpaceXplorer_game/spaceXplorer/cmake-build-debug/CMakeFiles/rebuild_cache.dir
