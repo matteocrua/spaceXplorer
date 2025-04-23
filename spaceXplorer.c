@@ -4,11 +4,12 @@
     Author: Matteo Crua
     Date: 11/04/2025
     Input/Output: N/A
-    Version 2.1
+    Version 3.0
     Log:
-      1.0: initial added initMap() and printMap() 11/04/2025
-      2.0: added initJunk() and initAsteroid() 11/04/2025
-      2.1: added comments 11/04/2025
+      1.0: initial added initMap() and printMap()           11/04/2025
+      2.0: added initJunk() and initAsteroid()              11/04/2025
+      2.1: added comments                                   11/04/2025
+      3.0: added ship initialisation                        23/04/2025
 */
 
 #include <stdio.h>
@@ -27,9 +28,11 @@ int main() {
     // declare the objects
     junk arrJunk[junkCount];
     asteroid arrAsteroid[asteroidCount];
+    ship player;
 
     // initialise the objects
     initMap();
+    initShip(&player);
     spawnAsteroid(arrAsteroid, asteroidCount);
     spawnJunk(arrJunk, junkCount);
 

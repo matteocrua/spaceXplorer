@@ -4,12 +4,13 @@
     Author: Matteo Crua
     Date: 11/04/2025
     Input/Output:
-    Version 2.0
+    Version 3.0
     Log:
-      1.0: initial, added map initialisation and printMap() 11/04/2025
-      1.1: added comments 11/04/2025
-      2.0: added junk and asteroid initialisation 11/04/2025
-      2.1: added occupied check for junk and asteroid 14/04/2025
+      1.0: initial, added map initialisation and printMap()     11/04/2025
+      1.1: added comments                                       11/04/2025
+      2.0: added junk and asteroid initialisation               11/04/2025
+      2.1: added occupied check for junk and asteroid           14/04/2025
+      3.0: added ship initialisation                            23/04/2025
 */
 
 #include <stdio.h>
@@ -81,6 +82,22 @@ void spawnAsteroid(asteroid arrAsteroid[], int numAsteroid) {
         // place on map with corresponding symbol
         map[arrAsteroid[i].pos.y][arrAsteroid[i].pos.x] = arrAsteroid[i].isSuperAsteroid ? 'A' : 'a';
     }
+}
+
+// function to initialise the ship
+// we want to modify the ship object so a pointer is used
+void initShip(ship *player) {
+    // set ship position to the centre of the map
+    player->pos.x = MAPSIZE / 2;
+    player->pos.y = MAPSIZE / 2;
+
+    // set initial health, fuel and total junk collected
+    player->health = 100;
+    player->fuel = 100;
+    player->totJunk = 0;
+
+    // place on map with corresponding symbol
+    map[player->pos.y][player->pos.x] = 'S';
 }
 
 // function to print the map
