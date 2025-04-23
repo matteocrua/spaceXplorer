@@ -103,25 +103,30 @@ void initShip(ship *player) {
 
 // function to assign colour to the current character
 void assignColour(char currentChar) {
-    if (currentChar == 'S') {
-        // orange ship
-        printf("\033[38;5;208m%2c\033[0m", currentChar);
-    }
-    else if (currentChar == 'J' || currentChar == 'j') {
-        // green junk
-        printf("\033[92m%2c\033[0m", currentChar);
-    }
-    else if (currentChar == 'A' || currentChar == 'a') {
-        // red asteroid
-        printf("\033[91m%2c\033[0m", currentChar);
-    }
-    else if (currentChar == BORDER) {
-        // blue border
-        printf("\033[94m%2c\033[0m", currentChar);
-    }
-    else {
-        // 2 whitespace to keep it square
-        printf("  ");
+    switch (currentChar) {
+        case 'J':
+            // fallthrough
+        case 'j':
+            // green junk
+            printf("\033[92m%2c\033[0m", currentChar);
+            break;
+        case 'A':
+            // fallthrough
+        case 'a':
+            // red asteroid
+            printf("\033[91m%2c\033[0m", currentChar);
+            break;
+        case 'S':
+            // orange ship
+            printf("\033[38;5;208m%2c\033[0m", currentChar);
+            break;
+        case BORDER:
+            // blue border
+            printf("\033[94m%2c\033[0m", currentChar);
+            break;
+        default:
+            // 2 whitespace to keep it square
+            printf("  ");
     }
 }
 
