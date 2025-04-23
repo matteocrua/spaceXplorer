@@ -6,8 +6,8 @@
     Input/Output: N/A
     Version 1.1
     Log:
-      1.0: initial, map size and structs                    11/04/2025
-      1.1: added comments                                   11/04/2025
+      1.0: initial, map size and structs                        11/04/2025
+      1.1: added comments                                       11/04/2025
 */
 #ifndef GAME_H
 #define GAME_H
