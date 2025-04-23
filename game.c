@@ -101,6 +101,7 @@ void initShip(ship *player) {
     map[player->pos.y][player->pos.x] = 'S';
 }
 
+// function to assign colour to the current character
 void assignColour(char currentChar) {
     if (currentChar == 'S') {
         // orange ship
