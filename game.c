@@ -4,13 +4,14 @@
     Author: Matteo Crua
     Date: 11/04/2025
     Input/Output:
-    Version 3.0
+    Version 4.0
     Log:
       1.0: initial, added map initialisation and printMap()     11/04/2025
-      1.1: added comments                                       11/04/2025
+        1.1: added comments                                     11/04/2025
       2.0: added junk and asteroid initialisation               11/04/2025
-      2.1: added occupied check for junk and asteroid           14/04/2025
+        2.1: added occupied check for junk and asteroid         14/04/2025
       3.0: added ship initialisation                            23/04/2025
+      4.0: added colour to the game                             23/04/2025
 */
 
 #include <stdio.h>
@@ -100,14 +101,37 @@ void initShip(ship *player) {
     map[player->pos.y][player->pos.x] = 'S';
 }
 
+void assignColour(char currentChar) {
+    if (currentChar == 'S') {
+        // orange ship
+        printf("\033[38;5;208m%2c\033[0m", currentChar);
+    }
+    else if (currentChar == 'J' || currentChar == 'j') {
+        // green junk
+        printf("\033[92m%2c\033[0m", currentChar);
+    }
+    else if (currentChar == 'A' || currentChar == 'a') {
+        // red asteroid
+        printf("\033[91m%2c\033[0m", currentChar);
+    }
+    else if (currentChar == BORDER) {
+        // blue border
+        printf("\033[94m%2c\033[0m", currentChar);
+    }
+    else {
+        // 2 whitespace to keep it square
+        printf("  ");
+    }
+}
+
 // function to print the map
 void printMap(){
     for(int i = 0; i < MAPSIZE; i++){
-        for (int j = 0; j < MAPSIZE; j++){
-            // 2 spaces for each cell
-            // to make map look square
-            printf("%2c", map[i][j]);
+        for (int j = 0; j < MAPSIZE; j++) {
+            char currentChar = map[i][j];
+            assignColour(currentChar);
         }
+        // print a new line after each row
         printf("\n");
     }
 }
