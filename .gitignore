@@ -47,6 +47,6 @@
 
 # CLion specific
 cmake-build-debug/Testing/Temporary/LastTest.log
-CMakeLists.txt.user
+CMakeLists.txt
 cmake-build-debug/
 .idea/
