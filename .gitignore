@@ -46,7 +46,7 @@
 .DS_Store
 
 # CLion specific
-/cmake-build-debug/Testing/Temporary/LastTest.log
+cmake-build-debug/Testing/Temporary/LastTest.log
 CMakeLists.txt.user
 /cmake-build-debug/
 .idea/
