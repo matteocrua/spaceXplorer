@@ -38,6 +38,9 @@ int main() {
 
     // print the map
     printMap();
+
+    // pause for testing purpose
+    getchar();
 }
 
 

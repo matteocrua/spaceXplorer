@@ -104,9 +104,9 @@ void initShip(ship *player) {
 void printMap(){
     for(int i = 0; i < MAPSIZE; i++){
         for (int j = 0; j < MAPSIZE; j++){
-            // 3 spaces for each cell
+            // 2 spaces for each cell
             // to make map look square
-            printf("%3c", map[i][j]);
+            printf("%2c", map[i][j]);
         }
         printf("\n");
     }
