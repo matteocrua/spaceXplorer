@@ -35,7 +35,8 @@ void initMap(){
     }
 }
 
-void initJunk(junk arrJunk[], int numJunk) {
+// function to spawn the junk
+void spawnJunk(junk arrJunk[], int numJunk) {
     // loop through the given number of junk
     for (int i = 0; i < numJunk; i++) {
         // check if current cell is empty
@@ -50,7 +51,7 @@ void initJunk(junk arrJunk[], int numJunk) {
         arrJunk[i].isSuperJunk = (rand() % 10 == 0);
 
         // set value based on junk type
-        // if super junk, value is 50, else 10
+        // if super junk, value is 20, else 10
         arrJunk[i].value = arrJunk[i].isSuperJunk ? 20 : 10;
 
         // place on map with corresponding symbol
@@ -58,8 +59,8 @@ void initJunk(junk arrJunk[], int numJunk) {
     }
 }
 
-// function to initialise the asteroids
-void initAsteroid(asteroid arrAsteroid[], int numAsteroid) {
+// function to spawn the asteroids
+void spawnAsteroid(asteroid arrAsteroid[], int numAsteroid) {
     // loop through the given number of asteroids
     for (int i = 0; i < numAsteroid; i++) {
         // check if current cell is empty

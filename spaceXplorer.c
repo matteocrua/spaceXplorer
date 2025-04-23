@@ -30,8 +30,8 @@ int main() {
 
     // initialise the objects
     initMap();
-    initAsteroid(arrAsteroid, asteroidCount);
-    initJunk(arrJunk, junkCount);
+    spawnAsteroid(arrAsteroid, asteroidCount);
+    spawnJunk(arrJunk, junkCount);
 
     // print the map
     printMap();
