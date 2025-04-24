@@ -4,7 +4,7 @@
     Author: Matteo Crua
     Date: 11/04/2025
     Input/Output:
-    Version 4.0
+    Version 5.1
     Log:
       1.0: initial, added map initialisation and printMap()     11/04/2025
         1.1: added comments                                     11/04/2025
@@ -12,10 +12,14 @@
         2.1: added occupied check for junk and asteroid         14/04/2025
       3.0: added ship initialisation                            23/04/2025
       4.0: added colour to the game                             23/04/2025
+      5.0: added player movement                                24/04/2025
+        5.1: added comments                                     24/04/2025
+        5.2: fixed player movement                              24/04/2025
 */
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <conio.h>
 #include "game.h"
 
 // define the map and its size
@@ -139,5 +143,63 @@ void printMap(){
         }
         // print a new line after each row
         printf("\n");
+    }
+}
+
+void playerMove(int key, ship *player) {
+    // store current position
+    int oldX = player->pos.x;
+    int oldY = player->pos.y;
+
+    // run until key string is found
+    do {
+        key = getch();
+    } while(key == 224);
+    // compare the string to the arrow
+    switch (key) {
+        // up
+        case 72:
+            if (player->pos.y - 1 > 0) {
+                player->pos.y -= 1;
+            }
+        break;
+        // down
+        case 80:
+            if (player->pos.y + 1 < MAPSIZE - 1) {
+                player->pos.y += 1;
+            }
+        break;
+        // left
+        case 75:
+            if (player->pos.x - 1 > 0) {
+                player->pos.x -= 1;
+            }
+        break;
+        // right
+        case 77:
+            if (player->pos.x + 1 < MAPSIZE - 1) {
+                player->pos.x += 1;
+            }
+        break;
+    }
+    // clear old position
+    map[oldY][oldX] = ' ';
+    // set new position
+    map[player->pos.y][player->pos.x] = 'S';
+    // clear the screen
+    printf("\033[J\033[H");
+    printMap();
+}
+
+void CheckKey(ship *player) {
+    int key;
+    // check if a key is pressed
+    if (kbhit()) {
+        // store the code of the key pressed
+        key = getch();
+        // arrow key code
+        if (key == 224) {
+            playerMove(key, player);
+        }
     }
 }
