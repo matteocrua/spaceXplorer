@@ -4,7 +4,7 @@
     Author: Matteo Crua
     Date: 11/04/2025
     Input/Output:
-    Version 5.1
+    Version 5.2
     Log:
       1.0: initial, added map initialisation and printMap()     11/04/2025
         1.1: added comments                                     11/04/2025

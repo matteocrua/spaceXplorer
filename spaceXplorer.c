@@ -4,7 +4,7 @@
     Author: Matteo Crua
     Date: 11/04/2025
     Input/Output: N/A
-    Version 4.1
+    Version 4.3
     Log:
       1.0: initial added initMap() and printMap()               11/04/2025
       2.0: added initJunk() and initAsteroid()                  11/04/2025
@@ -13,6 +13,7 @@
       4.0: added player movement test loop                      24/04/2025
         4.1: added comments                                     24/04/2025
         4.2: added hidden cursor                                24/04/2025
+        4.3: moved asteroid and junk count to game.h            25/04/2025
 */
 
 #include <stdio.h>
@@ -20,10 +21,6 @@
 #include <time.h>
 #include <conio.h>
 #include "game.h"
-
-// define the number of starting junk and asteroids
-int asteroidCount = 10;
-int junkCount = 10;
 
 int main() {
     // seed the random number generator
