@@ -136,6 +136,8 @@ void assignColour(char currentChar) {
 
 // function to print the map
 void printMap(){
+    // clear the screen
+    printf("\033[J\033[H");
     for(int i = 0; i < MAPSIZE; i++){
         for (int j = 0; j < MAPSIZE; j++) {
             char currentChar = map[i][j];
@@ -159,6 +161,7 @@ void playerMove(int key, ship *player) {
     switch (key) {
         // up
         case 72:
+            // check if next move is not on the border
             if (player->pos.y - 1 > 0) {
                 player->pos.y -= 1;
             }
@@ -186,8 +189,6 @@ void playerMove(int key, ship *player) {
     map[oldY][oldX] = ' ';
     // set new position
     map[player->pos.y][player->pos.x] = 'S';
-    // clear the screen
-    printf("\033[J\033[H");
     printMap();
 }
 
