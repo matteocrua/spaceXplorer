@@ -57,8 +57,8 @@ void spawnJunk(junk arrJunk[], int numJunk) {
         arrJunk[i].isSuperJunk = (rand() % 10 == 0);
 
         // set value based on junk type
-        // if super junk, value is 20, else 10
-        arrJunk[i].value = arrJunk[i].isSuperJunk ? 20 : 10;
+        // if super junk, value is between 10 and 20, else 1 to 10
+        arrJunk[i].value = arrJunk[i].isSuperJunk ? (10 + rand() % 11) : (1 + rand() % 10);
 
         // place on map with corresponding symbol
         map[arrJunk[i].pos.y][arrJunk[i].pos.x] = arrJunk[i].isSuperJunk ? 'J' : 'j';
@@ -81,8 +81,8 @@ void spawnAsteroid(asteroid arrAsteroid[], int numAsteroid) {
         arrAsteroid[i].isSuperAsteroid = (rand() % 5 == 0);
 
         // set damage based on asteroid type
-        // if super asteroid, damage is 20, else 10
-        arrAsteroid[i].dmg = arrAsteroid[i].isSuperAsteroid ? 20 : 10;
+        // if super asteroid, damage is between 15 and 25, else 1 to 10
+        arrAsteroid[i].dmg = arrAsteroid[i].isSuperAsteroid ? (15 + rand() % 11) : (1 + rand() % 10);
 
         // place on map with corresponding symbol
         map[arrAsteroid[i].pos.y][arrAsteroid[i].pos.x] = arrAsteroid[i].isSuperAsteroid ? 'A' : 'a';
