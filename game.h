@@ -4,12 +4,15 @@
     Author: Matteo Crua
     Date: 11/04/2025
     Input/Output: N/A
-    Version 1.2
+    Version 2.1
     Log:
       1.0: initial, map size and structs                        11/04/2025
         1.1: added comments                                     11/04/2025
         1.2: added junk and asteroid count                      25/04/2025
+      2.0: added cell structure for map                         27/04/2025
+        2.1: added empty space symbol and comments              27/04/2025
 */
+
 #ifndef GAME_H
 #define GAME_H
 
@@ -17,12 +20,9 @@
 
 #define MAPSIZE 20      // map size, 0-19 +2 for border
 #define BORDER '#'      // border symbol
+#define EMPTYSPACE ' ' // empty space symbol
 
-// define the number of starting junk and asteroids
-int asteroidCount = 10;
-int junkCount = 10;
-
-///// define the ship, junk and asteroid structures /////
+///// define the ship, junk, asteroid, and cell structures /////
 
 // coordinate structure
 typedef struct{
@@ -55,6 +55,14 @@ typedef struct{
     int dmg;
 }asteroid;
 
-/////////////////////////////////////////////////////////
+// cell structure for the map
+// currently empty?, symbol of object, and pointer to object
+typedef struct {
+    bool isEmpty;
+    char symbol;
+    int *objPtr;
+}cell;
+
+////////////////////////////////////////////////////////////////
 
 #endif //GAME_H

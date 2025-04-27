@@ -22,6 +22,10 @@
 #include <conio.h>
 #include "game.h"
 
+// define the number of starting junk and asteroids
+const int asteroidCount = 10;
+const int junkCount = 10;
+
 int main() {
     // seed the random number generator
     srand(time(NULL));

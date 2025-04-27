@@ -22,20 +22,24 @@
 #include <conio.h>
 #include "game.h"
 
-// define the map and its size
-char map[MAPSIZE][MAPSIZE];
+// define the map using cells and its size
+cell map[MAPSIZE][MAPSIZE];
 
-// function to initialise the map
+// function to initialise the map cells
 void initMap(){
     printf("\n");
     // loop through the map
     for(int i = 0; i < MAPSIZE; i++){
         for (int j = 0; j < MAPSIZE; j++) {
-            // if cell lies on the border, set it to '#'
+            // if cell lies on the border, set it to '#' (BORDER)
             if (i == 0 || i == MAPSIZE-1 || j == 0 || j == MAPSIZE-1){
-                map[i][j] = BORDER;
+                map[i][j].symbol = BORDER; // set border
+                map[i][j].isEmpty = false;
+                map[i][j].objPtr = NULL; // no object
             }else{
-                map[i][j] = ' '; // set empty cell
+                map[i][j].symbol = EMPTYSPACE; // whitespace
+                map[i][j].isEmpty = true;
+                map[i][j].objPtr = NULL; // no object
             }
         }
     }
@@ -50,8 +54,7 @@ void spawnJunk(junk arrJunk[], int numJunk) {
             // generate random positions avoiding borders
             arrJunk[i].pos.x = 1 + rand() % (MAPSIZE - 2);
             arrJunk[i].pos.y = 1 + rand() % (MAPSIZE - 2);
-
-        }while (map[arrJunk[i].pos.y][arrJunk[i].pos.x] != ' ');
+        }while (map[arrJunk[i].pos.y][arrJunk[i].pos.x].isEmpty == false);
 
         // 1 in 10 chance to be super junk
         arrJunk[i].isSuperJunk = (rand() % 10 == 0);
@@ -60,8 +63,10 @@ void spawnJunk(junk arrJunk[], int numJunk) {
         // if super junk, value is between 10 and 20, else 1 to 10
         arrJunk[i].value = arrJunk[i].isSuperJunk ? (10 + rand() % 11) : (1 + rand() % 10);
 
-        // place on map with corresponding symbol
-        map[arrJunk[i].pos.y][arrJunk[i].pos.x] = arrJunk[i].isSuperJunk ? 'J' : 'j';
+        // place on map with corresponding symbol and data
+        map[arrJunk[i].pos.y][arrJunk[i].pos.x].symbol = arrJunk[i].isSuperJunk ? 'J' : 'j';
+        map[arrJunk[i].pos.y][arrJunk[i].pos.x].isEmpty = false;
+        map[arrJunk[i].pos.y][arrJunk[i].pos.x].objPtr = &arrJunk[i];
     }
 }
 
@@ -74,8 +79,7 @@ void spawnAsteroid(asteroid arrAsteroid[], int numAsteroid) {
             // generate random positions avoiding borders
             arrAsteroid[i].pos.x = 1 + rand() % (MAPSIZE - 2);
             arrAsteroid[i].pos.y = 1 + rand() % (MAPSIZE - 2);
-
-        }while (map[arrAsteroid[i].pos.y][arrAsteroid[i].pos.x] != ' ');
+        }while (map[arrAsteroid[i].pos.y][arrAsteroid[i].pos.x].isEmpty == false);
 
         // 1 in 5 chance to be super asteroid
         arrAsteroid[i].isSuperAsteroid = (rand() % 5 == 0);
@@ -84,8 +88,10 @@ void spawnAsteroid(asteroid arrAsteroid[], int numAsteroid) {
         // if super asteroid, damage is between 15 and 25, else 1 to 10
         arrAsteroid[i].dmg = arrAsteroid[i].isSuperAsteroid ? (15 + rand() % 11) : (1 + rand() % 10);
 
-        // place on map with corresponding symbol
-        map[arrAsteroid[i].pos.y][arrAsteroid[i].pos.x] = arrAsteroid[i].isSuperAsteroid ? 'A' : 'a';
+        // place on map with corresponding symbol and data
+        map[arrAsteroid[i].pos.y][arrAsteroid[i].pos.x].symbol = arrAsteroid[i].isSuperAsteroid ? 'A' : 'a';
+        map[arrAsteroid[i].pos.y][arrAsteroid[i].pos.x].isEmpty = false;
+        map[arrAsteroid[i].pos.y][arrAsteroid[i].pos.x].objPtr = &arrAsteroid[i];
     }
 }
 
@@ -101,8 +107,10 @@ void initShip(ship *player) {
     player->fuel = 100;
     player->totJunk = 0;
 
-    // place on map with corresponding symbol
-    map[player->pos.y][player->pos.x] = 'S';
+    // place on map with corresponding symbol and data
+    map[player->pos.y][player->pos.x].symbol = 'S';
+    map[player->pos.y][player->pos.x].isEmpty = false;
+    map[player->pos.y][player->pos.x].objPtr = player;
 }
 
 // function to assign colour to the current character
@@ -140,7 +148,8 @@ void printMap(){
     printf("\033[J\033[H");
     for(int i = 0; i < MAPSIZE; i++){
         for (int j = 0; j < MAPSIZE; j++) {
-            char currentChar = map[i][j];
+            // output the symbol of the cell
+            char currentChar = map[i][j].symbol;
             assignColour(currentChar);
         }
         // print a new line after each row
@@ -186,9 +195,14 @@ void playerMove(int key, ship *player) {
         break;
     }
     // clear old position
-    map[oldY][oldX] = ' ';
+    map[oldY][oldX].symbol = EMPTYSPACE;
+    map[oldY][oldX].isEmpty = true; // set cell to empty
+    map[oldY][oldX].objPtr = NULL; // set object pointer to NULL
+
     // set new position
-    map[player->pos.y][player->pos.x] = 'S';
+    map[player->pos.y][player->pos.x].symbol = 'S';
+    map[player->pos.y][player->pos.x].isEmpty = false; // not empty
+    map[player->pos.y][player->pos.x].objPtr = player; // set object pointer to player
     printMap();
 }
 
