@@ -4,7 +4,7 @@
     Author: Matteo Crua
     Date: 11/04/2025
     Input/Output:
-    Version 6.1
+    Version 7.1
     Log:
       1.0: initial, added map initialisation and printMap()     11/04/2025
         1.1: added comments                                     11/04/2025
@@ -19,6 +19,9 @@
         5.4: simplified map colour assignment                   30/04/2025
       6.0: added stats display                                  30/04/2025
         6.1: added comments                                     30/04/2025
+      7.0: added collision checking and effects,
+           and shortened parts of code                          30/04/2025
+        7.1: added comments                                     30/04/2025
 */
 
 #include <stdio.h>
@@ -195,55 +198,78 @@ void printMap(ship *player) {
     displayStats(player);
 }
 
+// function to check for collision
+bool checkCollision(ship *player, int newY, int newX) {
+
+    // check if the new position is occupied
+    if (map[newY][newX].isEmpty == false) {
+        switch (map[newY][newX].symbol) {
+            case 'J':
+            case 'j':
+                // collect junk and increase total junk collected
+                // type cast the object pointer to junk to access its value
+                player->totJunk += ((junk *)map[newY][newX].objPtr)->value;
+                player->fuel--; // deduct 1 fuel
+                return true; // can move onto junk
+            case 'A':
+            case 'a':
+                // reduce health based on damage
+                // type cast the object pointer to asteroid to access its damage
+                player->health -= ((asteroid *)map[newY][newX].objPtr)->dmg;
+                player->fuel--; // deduct 1 fuel
+                return false; // cannot move onto asteroid
+            // collision with border or unknown, do nothing
+            case BORDER:
+            default: return false;
+        }
+    }
+    player->fuel--; // deduct 1 fuel
+    return true; // can move onto empty space
+}
+
+// function to move the player
 void playerMove(int key, ship *player) {
     // store current position
     int oldX = player->pos.x;
     int oldY = player->pos.y;
 
+    // temp new position values
+    int newX = oldX;
+    int newY = oldY;
+
     // run until key string is found
-    do {
-        key = getch();
-    } while(key == 224);
+    do { key = getch(); } while(key == 224);
+
     // compare the string to the arrow
     switch (key) {
         // up
-        case 72:
-            // check if next move is not on the border
-            if (player->pos.y - 1 > 0) {
-                player->pos.y -= 1;
-            }
-        break;
+        case 72: newY = oldY - 1; break;
         // down
-        case 80:
-            if (player->pos.y + 1 < MAPSIZE - 1) {
-                player->pos.y += 1;
-            }
-        break;
+        case 80: newY = oldY + 1; break;
         // left
-        case 75:
-            if (player->pos.x - 1 > 0) {
-                player->pos.x -= 1;
-            }
-        break;
+        case 75: newX = oldX - 1; break;
         // right
-        case 77:
-            if (player->pos.x + 1 < MAPSIZE - 1) {
-                player->pos.x += 1;
-            }
-        break;
-        default:
-            // invalid key, do nothing
-            break;
+        case 77: newX = oldX + 1; break;
+        // invalid key, do nothing
+        default: break;
     }
-    // clear old position
-    map[oldY][oldX].symbol = EMPTYSPACE;
-    map[oldY][oldX].isEmpty = true; // set cell to empty
-    map[oldY][oldX].objPtr = NULL; // set object pointer to NULL
 
-    // set new position
-    map[player->pos.y][player->pos.x].symbol = 'S';
-    map[player->pos.y][player->pos.x].isEmpty = false; // not empty
-    map[player->pos.y][player->pos.x].objPtr = player; // set object pointer to player
+    // if checkCollision returns true, move the player
+    if (checkCollision(player, newY, newX)) {
+        // clear old position
+        map[oldY][oldX].symbol = EMPTYSPACE;
+        map[oldY][oldX].isEmpty = true; // set cell to empty
+        map[oldY][oldX].objPtr = NULL; // set object pointer to NULL
+
+        // update player position
+        player->pos.x = newX;
+        player->pos.y = newY;
+
+        // set new position
+        map[newY][newX].symbol = 'S';
+        map[newY][newX].isEmpty = false; // not empty
+        map[newY][newX].objPtr = player; // set object pointer to player
+    }
     printMap(player);
 }
 
