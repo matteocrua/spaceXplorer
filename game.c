@@ -194,6 +194,9 @@ void playerMove(int key, ship *player) {
                 player->pos.x += 1;
             }
         break;
+        default:
+            // invalid key, do nothing
+            break;
     }
     // clear old position
     map[oldY][oldX].symbol = EMPTYSPACE;

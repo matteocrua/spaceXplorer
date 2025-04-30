@@ -11,6 +11,7 @@
         1̶.̶2̶:̶ ̶a̶d̶d̶e̶d̶ ̶j̶u̶n̶k̶ ̶a̶n̶d̶ ̶a̶s̶t̶e̶r̶o̶i̶d̶ ̶c̶o̶u̶n̶t̶ ̶ ̶ ̶ ̶ ̶ ̶ ̶ ̶ ̶ ̶ ̶ ̶ ̶ ̶ ̶ ̶ ̶ ̶ ̶ ̶ ̶ ̶2̶5̶/̶0̶4̶/̶2̶0̶2̶5̶
       2.0: added cell structure for map                         27/04/2025
         2.1: added empty space symbol and comments              27/04/2025
+        2.2: changed *objPtr to void* for cell structure        30/04/2025
 */
 
 #ifndef GAME_H
@@ -60,7 +61,7 @@ typedef struct{
 typedef struct {
     bool isEmpty;
     char symbol;
-    int *objPtr;
+    void *objPtr;
 }cell;
 
 ////////////////////////////////////////////////////////////////
