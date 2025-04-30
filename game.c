@@ -15,6 +15,8 @@
       5.0: added player movement                                24/04/2025
         5.1: added comments                                     24/04/2025
         5.2: fixed player movement                              24/04/2025
+        5.3: added hidden cursor                                24/04/2025
+        5.4: simplified map colour assignment                   30/04/2025
 */
 
 #include <stdio.h>
@@ -149,8 +151,7 @@ void printMap(){
     for(int i = 0; i < MAPSIZE; i++){
         for (int j = 0; j < MAPSIZE; j++) {
             // output the symbol of the cell
-            char currentChar = map[i][j].symbol;
-            assignColour(currentChar);
+            assignColour(map[i][j].symbol);
         }
         // print a new line after each row
         printf("\n");
