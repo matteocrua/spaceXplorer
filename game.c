@@ -4,7 +4,7 @@
     Author: Matteo Crua
     Date: 11/04/2025
     Input/Output:
-    Version 5.2
+    Version 6.1
     Log:
       1.0: initial, added map initialisation and printMap()     11/04/2025
         1.1: added comments                                     11/04/2025
@@ -17,6 +17,8 @@
         5.2: fixed player movement                              24/04/2025
         5.3: added hidden cursor                                24/04/2025
         5.4: simplified map colour assignment                   30/04/2025
+      6.0: added stats display                                  30/04/2025
+        6.1: added comments                                     30/04/2025
 */
 
 #include <stdio.h>
@@ -144,11 +146,44 @@ void assignColour(char currentChar) {
     }
 }
 
+void displayStats(ship *player) {
+    // store the player health and fuel
+    int health = player->health;
+    int fuel = player->fuel;
+
+    // print the health bar
+    printf("| HP:%3d [", health);
+    for (int i = 0; i < 10; i++) {
+        if (i< health/10) {
+            printf("\033[101m \033[0m"); // red
+        }else {
+            printf("\033[100m \033[0m"); // grey
+        }
+    }
+    printf("] | ");
+
+    // print the fuel bar
+    printf("Fuel:%3d [", fuel);
+    for (int i = 0; i < 10; i++) {
+        if (i< fuel/10) {
+            printf("\033[43m \033[0m"); // yellow
+        }else {
+            printf("\033[100m \033[0m"); // grey
+        }
+    }
+    printf("] | ");
+
+    // print the total junk collected
+    printf("Total Junk:%3d |", player->totJunk);
+}
+
 // function to print the map
-void printMap(){
+void printMap(ship *player) {
     // clear the screen
     printf("\033[J\033[H");
     for(int i = 0; i < MAPSIZE; i++){
+        // indent the map to align with the stats
+        printf("           ");
         for (int j = 0; j < MAPSIZE; j++) {
             // output the symbol of the cell
             assignColour(map[i][j].symbol);
@@ -156,6 +191,8 @@ void printMap(){
         // print a new line after each row
         printf("\n");
     }
+    // print the stats
+    displayStats(player);
 }
 
 void playerMove(int key, ship *player) {
@@ -207,7 +244,7 @@ void playerMove(int key, ship *player) {
     map[player->pos.y][player->pos.x].symbol = 'S';
     map[player->pos.y][player->pos.x].isEmpty = false; // not empty
     map[player->pos.y][player->pos.x].objPtr = player; // set object pointer to player
-    printMap();
+    printMap(player);
 }
 
 void CheckKey(ship *player) {
