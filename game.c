@@ -198,6 +198,23 @@ void printMap(ship *player) {
     displayStats(player);
 }
 
+// function to check the players health and fuel
+bool checkStats(ship *player) {
+    // check if the player is dead
+    if (player->health <= 0) {
+        printf("\033[2J\033[H");
+        printf("\n\nYou have died!\n");
+        return false; // game over
+    }
+    // check if the player is out of fuel
+    if (player->fuel <= 0) {
+        printf("\033[2J\033[H");
+        printf("\n\nYou have run out of fuel!\n");
+        return false; // game over
+    }
+    return true; // game continues
+}
+
 // function to check for collision
 bool checkCollision(ship *player, int newY, int newX) {
 
@@ -270,6 +287,12 @@ void playerMove(int key, ship *player) {
         map[newY][newX].isEmpty = false; // not empty
         map[newY][newX].objPtr = player; // set object pointer to player
     }
+
+    if (checkStats(player) == false) {
+        getchar();
+        exit(0);
+    }
+
     printMap(player);
 }
 
