@@ -22,6 +22,8 @@
       7.0: added collision checking and effects,
            and shortened parts of code                          30/04/2025
         7.1: added comments                                     30/04/2025
+        7.2: added check for player health and fuel
+             with end condition                                 30/04/2025
 */
 
 #include <stdio.h>
