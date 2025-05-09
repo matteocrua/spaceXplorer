@@ -4,7 +4,7 @@
     Author: Matteo Crua
     Date: 11/04/2025
     Input/Output: N/A
-    Version 2.1
+    Version 3.0
     Log:
       1.0: initial, map size and structs                        11/04/2025
         1.1: added comments                                     11/04/2025
@@ -12,6 +12,8 @@
       2.0: added cell structure for map                         27/04/2025
         2.1: added empty space symbol and comments              27/04/2025
         2.2: changed *objPtr to void* for cell structure        30/04/2025
+      3.0: added enum struct for directions
+           + updated asteroid struct                            09/05/2025
 */
 
 #ifndef GAME_H
@@ -48,12 +50,18 @@ typedef struct {
     int value;
 }junk;
 
+// enumerations for direction
+typedef enum {
+    UP, DOWN, LEFT, RIGHT
+}direction;
+
 // asteroid structure with:
-// position, super asteroid? and damage
+// position, super asteroid?, damage and direction
 typedef struct{
     coord pos;
     bool isSuperAsteroid;
     int dmg;
+    direction dir;
 }asteroid;
 
 // cell structure for the map

@@ -4,7 +4,7 @@
     Author: Matteo Crua
     Date: 11/04/2025
     Input/Output:
-    Version 7.1
+    Version 8.1
     Log:
       1.0: initial, added map initialisation and printMap()     11/04/2025
         1.1: added comments                                     11/04/2025
@@ -24,6 +24,8 @@
         7.1: added comments                                     30/04/2025
         7.2: added check for player health and fuel
              with end condition                                 30/04/2025
+      8.0: added asteroid movement                              09/05/2025
+        8.1: added comments                                     09/05/2025
 */
 
 #include <stdio.h>
@@ -96,6 +98,10 @@ void spawnAsteroid(asteroid arrAsteroid[], int numAsteroid) {
         // set damage based on asteroid type
         // if super asteroid, damage is between 15 and 25, else 1 to 10
         arrAsteroid[i].dmg = arrAsteroid[i].isSuperAsteroid ? (15 + rand() % 11) : (1 + rand() % 10);
+
+        // assign random direction
+        // 0 = UP, 1 = DOWN, 2 = LEFT, 3 = RIGHT
+        arrAsteroid[i].dir = rand() % 4;
 
         // place on map with corresponding symbol and data
         map[arrAsteroid[i].pos.y][arrAsteroid[i].pos.x].symbol = arrAsteroid[i].isSuperAsteroid ? 'A' : 'a';
@@ -200,6 +206,58 @@ void printMap(ship *player) {
     displayStats(player);
 }
 
+// function to move asteroids
+void moveAsteroids(asteroid arrAsteroid[], int numAsteroid, ship *player) {
+    for (int i = 0; i < numAsteroid; i++) {
+        // current position
+        int oldX = arrAsteroid[i].pos.x;
+        int oldY = arrAsteroid[i].pos.y;
+
+        // define new position
+        int newX = oldX;
+        int newY = oldY;
+
+        // change coordinate based on direction
+        switch (arrAsteroid[i].dir) {
+            case UP:    newY = oldY - 1; break;
+            case DOWN:  newY = oldY + 1; break;
+            case LEFT:  newX = oldX - 1; break;
+            case RIGHT: newX = oldX + 1; break;
+        }
+
+        // check if hits ship
+        if (map[newY][newX].symbol == 'S') {
+            player->health -= arrAsteroid[i].dmg; // reduce health
+        }
+        // check if cell is empty
+        else if (map[newY][newX].isEmpty) {
+            // clear old position
+            map[oldY][oldX].symbol = EMPTYSPACE;
+            map[oldY][oldX].isEmpty = true;
+            map[oldY][oldX].objPtr = NULL;
+
+            // update asteroid position
+            arrAsteroid[i].pos.x = newX;
+            arrAsteroid[i].pos.y = newY;
+
+            // update map
+            map[newY][newX].symbol = arrAsteroid[i].isSuperAsteroid ? 'A' : 'a';
+            map[newY][newX].isEmpty = false;
+            map[newY][newX].objPtr = &arrAsteroid[i];
+        }
+        // hit junk, asteroid, or BORDER
+        else {
+            // clear old position
+            map[oldY][oldX].symbol = EMPTYSPACE;
+            map[oldY][oldX].isEmpty = true;
+            map[oldY][oldX].objPtr = NULL;
+
+            // respawn the asteroid
+            spawnAsteroid(&arrAsteroid[i], 1);
+        }
+    }
+}
+
 // function to check the players health and fuel
 bool checkStats(ship *player) {
     // check if the player is dead
@@ -247,7 +305,7 @@ bool checkCollision(ship *player, int newY, int newX) {
 }
 
 // function to move the player
-void playerMove(int key, ship *player) {
+void playerMove(int key, ship *player, asteroid arrAsteroid[], int asteroidCount) {
     // store current position
     int oldX = player->pos.x;
     int oldY = player->pos.y;
@@ -295,10 +353,11 @@ void playerMove(int key, ship *player) {
         exit(0);
     }
 
+    moveAsteroids(arrAsteroid, asteroidCount, player);
     printMap(player);
 }
 
-void CheckKey(ship *player) {
+void CheckKey(ship *player, asteroid arrAsteroid[], int asteroidCount) {
     int key;
     // check if a key is pressed
     if (kbhit()) {
@@ -306,7 +365,7 @@ void CheckKey(ship *player) {
         key = getch();
         // arrow key code
         if (key == 224) {
-            playerMove(key, player);
+            playerMove(key, player, arrAsteroid, asteroidCount);
         }
     }
 }
