@@ -4,7 +4,7 @@
     Author: Matteo Crua
     Date: 11/04/2025
     Input/Output:
-    Version 8.1
+    Version 8.2
     Log:
       1.0: initial, added map initialisation and printMap()     11/04/2025
         1.1: added comments                                     11/04/2025
@@ -26,6 +26,7 @@
              with end condition                                 30/04/2025
       8.0: added asteroid movement                              09/05/2025
         8.1: added comments                                     09/05/2025
+        8.2: rework - added set and clear functions             09/05/2025
 */
 
 #include <stdio.h>
@@ -56,6 +57,20 @@ void initMap(){
     }
 }
 
+// function to clear a position on the map
+void clearPos(int y, int x) {
+    map[y][x].symbol = EMPTYSPACE;
+    map[y][x].isEmpty = true;
+    map[y][x].objPtr = NULL;
+}
+
+// function to set a position on the map
+void setPos(int y, int x, char symbol, void *objPtr) {
+    map[y][x].symbol = symbol;
+    map[y][x].isEmpty = false;
+    map[y][x].objPtr = objPtr;
+}
+
 // function to spawn the junk
 void spawnJunk(junk arrJunk[], int numJunk) {
     // loop through the given number of junk
@@ -75,9 +90,8 @@ void spawnJunk(junk arrJunk[], int numJunk) {
         arrJunk[i].value = arrJunk[i].isSuperJunk ? (10 + rand() % 11) : (1 + rand() % 10);
 
         // place on map with corresponding symbol and data
-        map[arrJunk[i].pos.y][arrJunk[i].pos.x].symbol = arrJunk[i].isSuperJunk ? 'J' : 'j';
-        map[arrJunk[i].pos.y][arrJunk[i].pos.x].isEmpty = false;
-        map[arrJunk[i].pos.y][arrJunk[i].pos.x].objPtr = &arrJunk[i];
+        setPos(arrJunk[i].pos.y, arrJunk[i].pos.x,
+               arrJunk[i].isSuperJunk ? 'J' : 'j', &arrJunk[i]);
     }
 }
 
@@ -104,9 +118,8 @@ void spawnAsteroid(asteroid arrAsteroid[], int numAsteroid) {
         arrAsteroid[i].dir = rand() % 4;
 
         // place on map with corresponding symbol and data
-        map[arrAsteroid[i].pos.y][arrAsteroid[i].pos.x].symbol = arrAsteroid[i].isSuperAsteroid ? 'A' : 'a';
-        map[arrAsteroid[i].pos.y][arrAsteroid[i].pos.x].isEmpty = false;
-        map[arrAsteroid[i].pos.y][arrAsteroid[i].pos.x].objPtr = &arrAsteroid[i];
+        setPos(arrAsteroid[i].pos.y, arrAsteroid[i].pos.x,
+               arrAsteroid[i].isSuperAsteroid ? 'A' : 'a', &arrAsteroid[i]);
     }
 }
 
@@ -123,9 +136,7 @@ void initShip(ship *player) {
     player->totJunk = 0;
 
     // place on map with corresponding symbol and data
-    map[player->pos.y][player->pos.x].symbol = 'S';
-    map[player->pos.y][player->pos.x].isEmpty = false;
-    map[player->pos.y][player->pos.x].objPtr = player;
+    setPos(player->pos.y, player->pos.x, 'S', player);
 }
 
 // function to assign colour to the current character
@@ -232,25 +243,19 @@ void moveAsteroids(asteroid arrAsteroid[], int numAsteroid, ship *player) {
         // check if cell is empty
         else if (map[newY][newX].isEmpty) {
             // clear old position
-            map[oldY][oldX].symbol = EMPTYSPACE;
-            map[oldY][oldX].isEmpty = true;
-            map[oldY][oldX].objPtr = NULL;
+            clearPos(oldY, oldX);
 
             // update asteroid position
             arrAsteroid[i].pos.x = newX;
             arrAsteroid[i].pos.y = newY;
 
             // update map
-            map[newY][newX].symbol = arrAsteroid[i].isSuperAsteroid ? 'A' : 'a';
-            map[newY][newX].isEmpty = false;
-            map[newY][newX].objPtr = &arrAsteroid[i];
+            setPos(newY, newX, arrAsteroid[i].isSuperAsteroid ? 'A' : 'a', &arrAsteroid[i]);
         }
         // hit junk, asteroid, or BORDER
         else {
             // clear old position
-            map[oldY][oldX].symbol = EMPTYSPACE;
-            map[oldY][oldX].isEmpty = true;
-            map[oldY][oldX].objPtr = NULL;
+            clearPos(oldY, oldX);
 
             // respawn the asteroid
             spawnAsteroid(&arrAsteroid[i], 1);
@@ -334,18 +339,14 @@ void playerMove(int key, ship *player, asteroid arrAsteroid[], int asteroidCount
     // if checkCollision returns true, move the player
     if (checkCollision(player, newY, newX)) {
         // clear old position
-        map[oldY][oldX].symbol = EMPTYSPACE;
-        map[oldY][oldX].isEmpty = true; // set cell to empty
-        map[oldY][oldX].objPtr = NULL; // set object pointer to NULL
+        clearPos(oldY, oldX);
 
         // update player position
         player->pos.x = newX;
         player->pos.y = newY;
 
         // set new position
-        map[newY][newX].symbol = 'S';
-        map[newY][newX].isEmpty = false; // not empty
-        map[newY][newX].objPtr = player; // set object pointer to player
+        setPos(newY, newX, 'S', player);
     }
 
     if (checkStats(player) == false) {
