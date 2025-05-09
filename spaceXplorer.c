@@ -51,7 +51,7 @@ int main() {
         // hide cursor
         printf("\033[?25l");
         if (kbhit()) {
-            CheckKey(&player, arrAsteroid, asteroidCount);
+            checkKey(&player, arrAsteroid, asteroidCount);
         }
     }
 
