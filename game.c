@@ -354,6 +354,8 @@ bool checkCollision(ship *player, int newY, int newX) {
                 // type cast the object pointer to junk to access its value
                 player->totJunk += ((junk *)map[newY][newX].objPtr)->value;
                 player->fuel--; // deduct 1 fuel
+                // respawn the junk
+                spawnJunk(map[newY][newX].objPtr, 1);
                 return true; // can move onto junk
             case 'A':
             case 'a':
