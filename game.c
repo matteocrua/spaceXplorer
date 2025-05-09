@@ -27,7 +27,8 @@
       8.0: added asteroid movement                              09/05/2025
         8.1: added comments                                     09/05/2025
         8.2: rework - added set and clear functions             09/05/2025
-*/
+      9.0: added shop display and purhase options               09/05/2025
+        9.1: added comments                                     09/05/2025
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -193,10 +194,69 @@ void displayStats(ship *player) {
             printf("\033[100m \033[0m"); // grey
         }
     }
-    printf("] | ");
-
     // print the total junk collected
-    printf("Total Junk:%3d |", player->totJunk);
+    printf("] | Total Junk:%3d |\n\n", player->totJunk);
+}
+
+// function to display the shop
+void displayShop(ship *player) {
+    // print the shop items
+    printf("\t\t==============Shop=============\n");
+    printf("\t\t|   100 junk    |   50 junk   |\n\t\t");
+    // if player has enough junk, make it flash
+    if (player->totJunk >= 100) {
+        printf("| 1. \033[5;91m+10\033[0m Health ");
+    } else {
+        printf("| 1. \033[91m+10\033[0m Health ");
+    }
+    if (player->totJunk >= 50) {
+        printf("| 2. \033[5;33m+10\033[0m fuel |\n");
+    } else {
+        printf("| 2. \033[33m+10\033[0m fuel |\n");
+    }
+    printf("\t\t===============================\n");
+}
+
+// function for buying health and fuel
+void shop(int item, ship *player) {
+    switch (item) {
+        // buy health
+        case 1:
+            // check if player is at max health
+            if (player->health >= 100) {
+                printf("\n\nyou are already at max health\n");
+                break;
+            }
+            // check if player has enough junk
+            if (player->totJunk < 100) {
+                printf("\n\nyou do not have enough junk\n");
+                break;
+            }
+            // if ok, add health and reduce junk
+            printf("\n\nyou have bought 10 health\n");
+            player->health += 10;
+            player->totJunk -= 100;
+            break;
+        // buy fuel
+        case 2:
+            // check if player is at max fuel
+            if (player->fuel >= 100) {
+                printf("\n\nyou are already at max fuel\n");
+                break;
+            }
+            // check if player has enough junk
+            if (player->totJunk < 50) {
+                printf("\n\nyou do not have enough junk\n");
+                break;
+            }
+            // if ok, add fuel and reduce junk
+            printf("\n\nyou have bought 10 fuel\n");
+            player->fuel += 10;
+            player->totJunk -= 50;
+            break;
+        default: // invalid item
+            break;
+    }
 }
 
 // function to print the map
@@ -213,8 +273,9 @@ void printMap(ship *player) {
         // print a new line after each row
         printf("\n");
     }
-    // print the stats
+    // print the stats and shop
     displayStats(player);
+    displayShop(player);
 }
 
 // function to move asteroids
@@ -358,15 +419,22 @@ void playerMove(int key, ship *player, asteroid arrAsteroid[], int asteroidCount
     printMap(player);
 }
 
-void CheckKey(ship *player, asteroid arrAsteroid[], int asteroidCount) {
+void checkKey(ship *player, asteroid arrAsteroid[], int asteroidCount) {
     int key;
     // check if a key is pressed
     if (kbhit()) {
         // store the code of the key pressed
         key = getch();
         // arrow key code
-        if (key == 224) {
-            playerMove(key, player, arrAsteroid, asteroidCount);
+        switch (key) {
+            // buy health
+            case 49: shop(1, player); break;
+            // buy fuel
+            case 50: shop(2, player); break;
+            // arrow key movement
+            case 224: playerMove(key, player, arrAsteroid, asteroidCount); break;
+            // invalid key, do nothing
+            default: break;
         }
     }
 }
