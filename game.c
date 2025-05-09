@@ -29,6 +29,7 @@
         8.2: rework - added set and clear functions             09/05/2025
       9.0: added shop display and purhase options               09/05/2025
         9.1: added comments                                     09/05/2025
+*/
 
 #include <stdio.h>
 #include <stdlib.h>
