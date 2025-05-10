@@ -4,7 +4,7 @@
     Author: Matteo Crua
     Date: 11/04/2025
     Input/Output:
-    Version 8.2
+    Version 10.1
     Log:
       1.0: initial, added map initialisation and printMap()     11/04/2025
         1.1: added comments                                     11/04/2025
@@ -29,6 +29,8 @@
         8.2: rework - added set and clear functions             09/05/2025
       9.0: added shop display and purhase options               09/05/2025
         9.1: added comments                                     09/05/2025
+      10.0: added high score saving and displaying              10/05/2025
+        10.1: added comments                                    10/05/2025
 */
 
 #include <stdio.h>
@@ -38,6 +40,10 @@
 
 // define the map using cells and its size
 cell map[MAPSIZE][MAPSIZE];
+
+// declare the score and name variables
+int score;
+char name[];
 
 // function to initialise the map cells
 void initMap(){
@@ -325,19 +331,60 @@ void moveAsteroids(asteroid arrAsteroid[], int numAsteroid, ship *player) {
     }
 }
 
+// function to save high scores
+void saveScore(char name[]) {
+    // open the file in append mode
+    FILE *filePtr = fopen("../highscores.txt", "a");
+        // write the name and score to the file
+        fprintf(filePtr, "name: %s score: %d\n", name, score);
+        // close the file once printed
+        fclose(filePtr);
+}
+
+
+// function to display the game over screen
+// and ask for name for high score
+bool ending(bool how) {
+    // clear the screen
+    printf("\033[H\033[J");
+
+    // check if player died or out of fuel
+    // open the file in read mode
+    FILE *filePtr = fopen(how? "../youDied.txt" : "../outOfFuel.txt", "r");
+
+    // read the file and print it
+    char ch;
+    while ((ch = fgetc(filePtr)) != EOF) {
+        // set text colour to yellow
+        printf("\033[93m\033[?25l");
+        putchar(ch);
+        printf("\033[0m");
+    }
+    // close the file once printed
+    fclose(filePtr);
+    // print the score
+    printf("\n\nyour score is: %d\n", score);
+    // ask for name
+    printf("\n\nenter your name: ");
+    // read the name from the user
+    scanf("%s", name);
+    // save the score to the file
+    saveScore(name);
+
+    // clear the screen
+    printf("\033[H\033[J");
+    return false; // game over
+}
+
 // function to check the players health and fuel
 bool checkStats(ship *player) {
     // check if the player is dead
     if (player->health <= 0) {
-        printf("\033[2J\033[H");
-        printf("\n\nYou have died!\n");
-        return false; // game over
+        return ending(true);
     }
     // check if the player is out of fuel
     if (player->fuel <= 0) {
-        printf("\033[2J\033[H");
-        printf("\n\nYou have run out of fuel!\n");
-        return false; // game over
+        return ending(false);
     }
     return true; // game continues
 }
@@ -354,6 +401,8 @@ bool checkCollision(ship *player, int newY, int newX) {
                 // type cast the object pointer to junk to access its value
                 player->totJunk += ((junk *)map[newY][newX].objPtr)->value;
                 player->fuel--; // deduct 1 fuel
+                // score is total junk collected in game
+                score += ((junk *)map[newY][newX].objPtr)->value;
                 // respawn the junk
                 spawnJunk(map[newY][newX].objPtr, 1);
                 return true; // can move onto junk
@@ -414,15 +463,14 @@ void playerMove(int key, ship *player, asteroid arrAsteroid[], int asteroidCount
     }
 
     if (checkStats(player) == false) {
-        getchar();
-        exit(0);
+        return;
     }
 
     moveAsteroids(arrAsteroid, asteroidCount, player);
     printMap(player);
 }
 
-void checkKey(ship *player, asteroid arrAsteroid[], int asteroidCount) {
+bool checkKey(ship *player, asteroid arrAsteroid[], int asteroidCount) {
     int key;
     // check if a key is pressed
     if (kbhit()) {
@@ -436,8 +484,10 @@ void checkKey(ship *player, asteroid arrAsteroid[], int asteroidCount) {
             case 50: shop(2, player); break;
             // arrow key movement
             case 224: playerMove(key, player, arrAsteroid, asteroidCount); break;
+            case 27: return false; // ESC key to quit
             // invalid key, do nothing
             default: break;
         }
     }
+    return true;
 }
