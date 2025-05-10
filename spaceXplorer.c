@@ -54,16 +54,16 @@ void viewHighScores() {
     printf("\033[H\033[J");
 
     // open file in read mode
-    FILE *fptr = fopen("../highscores.txt", "r");
+    FILE *filePtr = fopen("../highscores.txt", "r");
 
     // read the file and print it
     char ch;
-    while ((ch = fgetc(fptr)) != EOF) {
+    while ((ch = fgetc(filePtr)) != EOF) {
         putchar(ch);
     }
 
     // close the file once printed
-    fclose(fptr);
+    fclose(filePtr);
 
     printf("\npress any key to return to menu...");
     // wait for user
